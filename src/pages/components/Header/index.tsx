@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import styles from './styles.module.scss'
 import Image from 'next/image'
-import { SignInButton } from '../SignInButton'
+import SignInButton from '../SignInButton'
 
-export function Header() {
+export default function Header() {
   const [activeMenu, setActiveMenu] = useState('home')
 
   const handleActiveMenu = (menu: string) => {
