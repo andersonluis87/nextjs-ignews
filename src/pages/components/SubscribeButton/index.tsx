@@ -1,5 +1,4 @@
 import { useSession, signIn } from 'next-auth/react'
-
 import styles from './styles.module.scss'
 import { api } from '@/pages/services/api'
 import { getStripeJs } from '@/pages/services/stripe-js'
