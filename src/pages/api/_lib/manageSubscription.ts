@@ -6,10 +6,13 @@ export async function saveSubscription(
   subscriptionId: string,
   customerId: string
 ) {
+  const USER_BY_STRIPE_CUSTOMER_ID_INDEX = 'user_by_stripe_customer_id'
+  const SUBSCRIPTION_BY_ID_INDEX = 'subscription_by_id'
+
   const userRef = await fauna.query(
     q.Select(
       'ref',
-      q.Get(q.Match(q.Index('user_by_stripe_customer_id'), customerId))
+      q.Get(q.Match(q.Index(USER_BY_STRIPE_CUSTOMER_ID_INDEX), customerId))
     )
   )
 
@@ -23,6 +26,18 @@ export async function saveSubscription(
   }
 
   await fauna.query(
-    q.Create(q.Collection('subscriptions'), { data: subscriptionData })
+    q.If(
+      q.Not(
+        q.Exists(q.Match(q.Index(SUBSCRIPTION_BY_ID_INDEX), subscriptionId))
+      ),
+      q.Create(q.Collection('subscriptions'), { data: subscriptionData }),
+      q.Replace(
+        q.Select(
+          'ref',
+          q.Get(q.Match(q.Index(SUBSCRIPTION_BY_ID_INDEX), subscriptionId))
+        ),
+        { data: subscriptionData }
+      )
+    )
   )
 }
