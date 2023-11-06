@@ -4,6 +4,7 @@ import { GetStaticProps } from 'next'
 import { createClient } from '../../../prismicio'
 import { RichText } from 'prismic-dom'
 import { RTParagraphNode } from '@prismicio/types'
+import Link from 'next/link'
 
 type Post = {
   slug: string
@@ -26,11 +27,11 @@ export default function Posts({ posts }: PostsProps) {
       <main className={styles.container}>
         <div className={styles.posts}>
           {posts.map(({ slug, title, excerpt, updatedAt }) => (
-            <a href="" key={slug}>
+            <Link href={`/posts/${slug}`} key={slug}>
               <time>{updatedAt}</time>
               <strong>{title}</strong>
               <p>{excerpt}</p>
-            </a>
+            </Link>
           ))}
         </div>
       </main>
