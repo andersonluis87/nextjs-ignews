@@ -1,35 +1,22 @@
-import { useState } from 'react'
-import styles from './styles.module.scss'
 import Image from 'next/image'
 import SignInButton from '../SignInButton'
+import styles from './styles.module.scss'
+
+import { ActiveLink } from '../ActiveLink'
 
 export default function Header() {
-  const [activeMenu, setActiveMenu] = useState('home')
-
-  const handleActiveMenu = (menu: string) => {
-    setActiveMenu(menu)
-  }
-
   return (
     <header className={styles.headerContainer}>
       <div className={styles.headerContent}>
         <Image src="/images/logo.svg" alt="ig.news" width={110} height={31} />
 
         <nav>
-          <a
-            href="#"
-            className={activeMenu === 'home' ? styles.active : ''}
-            onClick={() => handleActiveMenu('home')}
-          >
+          <ActiveLink href="/" activeClassName={styles.active}>
             Home
-          </a>
-          <a
-            href="#"
-            className={activeMenu === 'posts' ? styles.active : ''}
-            onClick={() => handleActiveMenu('posts')}
-          >
+          </ActiveLink>
+          <ActiveLink href="/posts" activeClassName={styles.active}>
             Posts
-          </a>
+          </ActiveLink>
         </nav>
 
         <SignInButton />
