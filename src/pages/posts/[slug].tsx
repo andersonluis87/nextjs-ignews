@@ -5,6 +5,7 @@ import { RichText } from 'prismic-dom'
 import Head from 'next/head'
 import styles from './post.module.scss'
 import { ParsedUrlQuery } from 'querystring'
+import { SessionSubscription } from '../api/auth/[...nextauth]'
 
 interface PostProps {
   post: {
@@ -43,18 +44,25 @@ export const getServerSideProps: GetServerSideProps = async ({
   req,
   params,
 }) => {
-  const session = await getSession({ req })
+  const session: SessionSubscription | null = await getSession({ req })
+
+  console.log('session', session)
+
   const { slug } = params as Params
 
-  if (!session?.user?.email) {
-    console.log('not logged in')
+  if (!session?.activeSubscription) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
   }
 
   const prismicClient = createClient()
 
   const response = await prismicClient.getByUID('post', String(slug))
 
-  console.log('response', JSON.stringify(response, null, 4))
   const post = {
     slug,
     title: RichText.asText(response.data.title),
