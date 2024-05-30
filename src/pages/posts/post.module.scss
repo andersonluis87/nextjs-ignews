@@ -49,5 +49,11 @@
       border-radius: 0.25rem;
       margin: 1rem 0;
     }
+
+    &.previewContent {
+      background: linear-gradient(var(--gray-100), transparent);
+      background-clip: text;
+      --webkit-text-fill-color: transparent;
+    }
   }
 }

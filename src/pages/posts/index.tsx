@@ -43,7 +43,6 @@ export const getStaticProps: GetStaticProps = async () => {
   const prismicClient = createClient()
 
   const response = await prismicClient.getAllByType('post')
-  console.log('posts', JSON.stringify(response[0], null, 2))
 
   const posts = response.map((post) => {
     const firstParagraph = post.data.content.find(
