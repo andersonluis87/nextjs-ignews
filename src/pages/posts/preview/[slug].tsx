@@ -4,6 +4,11 @@ import { RichText } from 'prismic-dom'
 import Head from 'next/head'
 import styles from '../post.module.scss'
 import { ParsedUrlQuery } from 'querystring'
+import Link from 'next/link'
+import { useSession } from 'next-auth/react'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
+import { SessionSubscription } from '@/pages/api/auth/[...nextauth]'
 
 interface PostPreviewProps {
   post: {
@@ -19,6 +24,17 @@ interface Params extends ParsedUrlQuery {
 }
 
 export default function PostPreview({ post }: PostPreviewProps) {
+  const { data: session } = useSession()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!session) return
+
+    if ((session as SessionSubscription).activeSubscription) {
+      router.push(`/posts/${post.slug}`)
+    }
+  }, [session])
+
   return (
     <>
       <Head>
@@ -32,7 +48,12 @@ export default function PostPreview({ post }: PostPreviewProps) {
           <div
             className={`${styles.postContent} ${styles.previewContent}`}
             dangerouslySetInnerHTML={{ __html: post.content }}
-          ></div>
+          />
+
+          <div className={styles.continueReading}>
+            Wanna continue reading?
+            <Link href="/">Subscribe now 🤗</Link>
+          </div>
         </article>
       </main>
     </>
